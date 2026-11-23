@@ -1,0 +1,80 @@
+
+# BookBridge TSA4 - Setup Guide
+
+## Project Information
+Student: Amanda Andres
+Subject: CS0070L
+Section: TN22
+Project: BookBridge_TSA4
+
+## Project Description
+BookBridge TSA4 is a Java desktop library management
+application developed using Swing, JDBC, and MariaDB.
+
+The system manages books, members, loans, reservations,
+and library reports.
+
+## Requirements
+- Apache NetBeans
+- Java JDK supporting modern Java syntax
+- XAMPP with MariaDB
+- MariaDB Connector/J
+
+## Database Setup
+1. Open XAMPP Control Panel.
+2. Start MySQL.
+3. Open http://localhost/phpmyadmin.
+4. Select the Import tab.
+5. Import the schema.sql file.
+6. Verify that the bookbridge_tsa4 database contains:
+   - members
+   - books
+   - loans
+   - reservations
+
+## JDBC Configuration
+The application connects to:
+
+jdbc:mariadb://localhost:3306/bookbridge_tsa4
+
+Database credentials can be supplied through:
+- BOOKBRIDGE_DB_USER
+- BOOKBRIDGE_DB_PASSWORD
+
+The local development defaults are root and an
+empty password. These defaults should only be used
+in a local development environment.
+
+## Running the Application
+1. Open BookBridge_TSA4 in Apache NetBeans.
+2. Add MariaDB Connector/J to the project Libraries.
+3. Make sure MySQL is running in XAMPP.
+4. Clean and Build the project.
+5. Run bookbridge.app.BookBridgeApp.
+
+## Main Features
+- Book registration and searching
+- Member registration
+- Loan issuance and returns
+- Reservation creation and cancellation
+- Library reports
+- Database persistence
+- Background database operations using SwingWorker
+
+## Architecture
+BookBridgeFrame -> LibraryService -> DAO Classes
+-> DatabaseConnection -> MariaDB
+
+## Testing
+The application was tested for book and member
+registration, borrowing, returns, reservations,
+duplicate entries, loan-limit validation, database
+persistence, and database connection failure.
+
+See TSA4_Test_Report for documented results.
+
+## AI Assistance
+ChatGPT was used to assist with Java implementation,
+code review, debugging, and documentation.
+The application was executed and tested using
+Apache NetBeans and MariaDB.

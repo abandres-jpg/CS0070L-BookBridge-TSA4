@@ -1,0 +1,58 @@
+
+CREATE DATABASE IF NOT EXISTS bookbridge_tsa4;
+USE bookbridge_tsa4;
+
+CREATE TABLE IF NOT EXISTS members (
+    member_id VARCHAR(20) PRIMARY KEY,
+    full_name VARCHAR(100) NOT NULL,
+    membership_type ENUM('STUDENT', 'FACULTY', 'GUEST') NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT chk_member_name
+        CHECK (CHAR_LENGTH(TRIM(full_name)) > 0)
+);
+
+CREATE TABLE IF NOT EXISTS books (
+    isbn VARCHAR(20) PRIMARY KEY,
+    title VARCHAR(200) NOT NULL,
+    author VARCHAR(100) NOT NULL,
+    total_copies INT NOT NULL DEFAULT 1,
+    available_copies INT NOT NULL DEFAULT 1,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT chk_book_copies
+        CHECK (
+            total_copies >= 1
+            AND available_copies >= 0
+            AND available_copies <= total_copies
+        )
+);
+
+CREATE TABLE IF NOT EXISTS loans (
+    loan_id INT AUTO_INCREMENT PRIMARY KEY,
+    member_id VARCHAR(20) NOT NULL,
+    isbn VARCHAR(20) NOT NULL,
+    loan_days INT NOT NULL,
+    issue_date DATE NOT NULL,
+    due_date DATE NOT NULL,
+    return_date DATE DEFAULT NULL,
+    status ENUM('ACTIVE', 'RETURNED') NOT NULL DEFAULT 'ACTIVE',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_loan_member
+        FOREIGN KEY (member_id) REFERENCES members(member_id),
+    CONSTRAINT fk_loan_book
+        FOREIGN KEY (isbn) REFERENCES books(isbn),
+    CONSTRAINT chk_loan_days
+        CHECK (loan_days BETWEEN 1 AND 30)
+);
+
+CREATE TABLE IF NOT EXISTS reservations (
+    reservation_id INT AUTO_INCREMENT PRIMARY KEY,
+    member_id VARCHAR(20) NOT NULL,
+    isbn VARCHAR(20) NOT NULL,
+    reservation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    status ENUM('WAITING', 'READY', 'FULFILLED', 'CANCELLED')
+        NOT NULL DEFAULT 'WAITING',
+    CONSTRAINT fk_reservation_member
+        FOREIGN KEY (member_id) REFERENCES members(member_id),
+    CONSTRAINT fk_reservation_book
+        FOREIGN KEY (isbn) REFERENCES books(isbn)
+);
